@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+mongoose.set('debug', true);
 
 try {
     if (!process.env.MONGODB_URI) {
