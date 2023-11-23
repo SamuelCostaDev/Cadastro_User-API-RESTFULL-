@@ -115,7 +115,13 @@ router.delete('/users/:userId', async (req , res) => {
 
 router.get('/', (req, res) => {
     // Use o caminho absoluto do arquivo index.html
-    const indexPath = path.join(__dirname, '../public/test.html');
+    const indexPath = path.join(__dirname, '../public/register/index.html');
+    res.sendFile(indexPath);
+});
+
+router.get('/login', (req, res) => {
+    // Use o caminho absoluto do arquivo index.html
+    const indexPath = path.join(__dirname, '../public/login/index.html');
     res.sendFile(indexPath);
 });
 module.exports = app => {
