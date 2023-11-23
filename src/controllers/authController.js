@@ -9,6 +9,7 @@ const authConfig = require('../config/auth');
 const User = require('../models/user');
 
 const router = express.Router();
+const routerViews = express.Router();
 
 function generateToken(params = {}) {
     return jwt.sign(params, authConfig.secret, {
@@ -86,6 +87,7 @@ router.post('/authenticate', async (req, res) => {
 });
 
 
+// Rota para editar um usuário
 router.put('/users/update/:userId', async (req, res) => {
     try {
 
@@ -103,6 +105,7 @@ router.put('/users/update/:userId', async (req, res) => {
     }
 });
 
+// Rota para remover um usuário
 router.delete('/users/:userId', async (req , res) => {
     try {
         await User.findByIdAndDelete(req.params.userId);
@@ -114,7 +117,8 @@ router.delete('/users/:userId', async (req , res) => {
     }
 });
 
-router.get('/users', async (req, res) => {
+// Rota para vizualizar a view com todos os usários
+routerViews.get('/users', async (req, res) => {
     try {
         const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NWY2MjliMjE5MDdiMTIwZTUxZDA2NyIsImlhdCI6MTcwMDc1MzM3NywiZXhwIjoxNzAwODM5Nzc3fQ.B0oJbrMWwymU3-0AZtwr94OQDO77g7Bu29aojdgUujE';
 
@@ -137,14 +141,20 @@ router.get('/users', async (req, res) => {
     }
 });
 
+// Rota para vizualizar da view Principal
+routerViews.get('/', (req, res) => {
 
-router.get('/', (req, res) => {
-    // Renderize a view dashboard.ejs
-    res.render('test');
+    res.render('index');
+});
+
+// Rota para vizualizar a view de cadastro de usuário
+routerViews.get('/resgisterUser', (req, res) => {
+    
+    res.render('register/register');
 });
 
 module.exports = app => {
-    // Adiciona a rota para o index.html antes das outras rotas
-    app.use('/', router);
+//  Separando as rotas api, das views
+    app.use('/', routerViews);
     app.use('/api/v1/auth', router);
 };
