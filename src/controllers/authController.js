@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
+const axios = require('axios');
 
 const authConfig = require('../config/auth');
 
@@ -18,7 +19,7 @@ function generateToken(params = {}) {
 const authMiddleware = require('../middlewares/auth')
 
 // Rota para ver todos os usuários
-router.get('/usersAll', authMiddleware ,async (req , res) => {
+router.get('/usersAll' ,async (req , res) => {
     try {
         const users = await User.find();
 
@@ -113,17 +114,35 @@ router.delete('/users/:userId', async (req , res) => {
     }
 });
 
-router.get('/', (req, res) => {
-    // Use o caminho absoluto do arquivo index.html
-    const indexPath = path.join(__dirname, '../public/register/index.html');
-    res.sendFile(indexPath);
+router.get('/users', async (req, res) => {
+    try {
+        const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NWY2MjliMjE5MDdiMTIwZTUxZDA2NyIsImlhdCI6MTcwMDc1MzM3NywiZXhwIjoxNzAwODM5Nzc3fQ.B0oJbrMWwymU3-0AZtwr94OQDO77g7Bu29aojdgUujE';
+
+        // Faça a solicitação à API com o token de acesso no cabeçalho
+        const response = await axios.get('https://desafio02-escribo-53b905bd6eab.herokuapp.com/api/v1/auth/usersAll', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+
+        console.log(response);
+
+        const users = response.data.users;
+
+        res.render('dashboard/dashboard', { users });
+
+    } catch (error) {
+        console.error('Erro ao obter usuários da API:', error.message);
+        res.status(500).send('Erro ao obter usuários da API');
+    }
 });
 
-router.get('/login', (req, res) => {
-    // Use o caminho absoluto do arquivo index.html
-    const indexPath = path.join(__dirname, '../public/login/index.html');
-    res.sendFile(indexPath);
+
+router.get('/', (req, res) => {
+    // Renderize a view dashboard.ejs
+    res.render('test');
 });
+
 module.exports = app => {
     // Adiciona a rota para o index.html antes das outras rotas
     app.use('/', router);
