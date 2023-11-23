@@ -17,8 +17,8 @@
 - **Registrar um usuário:** `/api/v1/auth/register` - Método POST
 - **Logar:** `/api/v1/auth/authenticate` - Método POST
   - Para logar, é preciso passar no body o JSON: `{"name": "Meu Nome", "email": "meu@email.com", "password": "minhasenha", "tel": 0123456789}`
-- **Editar um usuário:** `/api/v1/auth/users/update/<userId>`
-- **Remover um usuário:** `/api/v1/auth/users/<userId>`
+- **Editar um usuário:** `/api/v1/auth/users/update/<userId>` - Método PUT
+- **Remover um usuário:** `/api/v1/auth/users/<userId>` - Método DELETE
 
 ### Rotas de Vizualização:
 
