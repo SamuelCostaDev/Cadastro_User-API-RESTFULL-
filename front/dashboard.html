@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Frontend - Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        button {
+            margin-bottom: 10px;
+            padding: 8px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Dashboard</h2>
+
+    <button onclick="listUsers()">Listar Usuários</button>
+    <ul id="userList"></ul>
+
+    <h2>Informações do Usuário</h2>
+    <form id="userInfoForm">
+        <input type="text" id="userId" placeholder="ID do Usuário" required>
+        <button type="button" onclick="getUserInfo()">Obter Informações</button>
+    </form>
+    <div id="userInfo"></div>
+
+    <h2>Deletar Usuário</h2>
+    <form id="deleteUserForm">
+        <input type="text" id="deleteUserId" placeholder="ID do Usuário" required>
+        <button type="button" onclick="deleteUser()">Deletar Usuário</button>
+    </form>
+
+    <script>
+        const BASE_URL = "https://desafio02-escribo-53b905bd6eab.herokuapp.com/api/v1/auth/";
+
+        function listUsers() {
+            fetch(BASE_URL + 'usersAll', {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const userList = document.getElementById('userList');
+                userList.innerHTML = '';
+                data.users.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = `${user.name} - ${user.email} - ${user.tel}`;
+                    userList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function getUserInfo() {
+            const userId = document.getElementById('userId').value;
+
+            fetch(BASE_URL + 'users/' + userId, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const userInfo = document.getElementById('userInfo');
+                userInfo.textContent = `${data.user.name} - ${data.user.email} - ${data.user.tel}`;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function deleteUser() {
+            const userId = document.getElementById('deleteUserId').value;
+
+            fetch(BASE_URL + 'delete', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+                body: JSON.stringify({ userId }),
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+</body>
+</html>
