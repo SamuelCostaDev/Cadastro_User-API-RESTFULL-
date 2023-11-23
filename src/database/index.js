@@ -1,19 +1,6 @@
-const { Console } = require('console');
 const mongoose = require('mongoose');
 
-const mongodbUrl = process.env.MONGODB_URL as string;
-
-// Conectar ao MongoDB
-mongoose.connect(
-    mongodbUrl,
-    {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-    },
-    () => {
-        console.log("Conectado ao MongoDB");
-    }
-);
+mongoose.connect('mongodb+srv://sandsoncostati:1bKVbNnLFj3olmpB@cluster0.4eomo7x.mongodb.net/?retryWrites=true&w=majority');
 mongoose.Promise = global.Promise;
 
 module.exports = mongoose;
