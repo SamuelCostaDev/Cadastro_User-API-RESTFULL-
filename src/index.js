@@ -9,6 +9,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 require('./controllers/authController')(app);
 require('./controllers/productController')(app);
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 8080, () => {
     console.log("Deu certo");
 });
