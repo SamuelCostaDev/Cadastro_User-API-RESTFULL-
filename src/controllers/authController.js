@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+const path = require('path');
 
 const authConfig = require('../config/auth');
 
@@ -113,4 +113,13 @@ router.delete('/users/:userId', async (req , res) => {
     }
 });
 
-module.exports = app => app.use('/api/v1/auth', router);
+router.get('/', (req, res) => {
+    // Use o caminho absoluto do arquivo index.html
+    const indexPath = path.join(__dirname, '../public/index.html');
+    res.sendFile(indexPath);
+});
+module.exports = app => {
+    // Adiciona a rota para o index.html antes das outras rotas
+    app.use('/', router);
+    app.use('/api/v1/auth', router);
+};
