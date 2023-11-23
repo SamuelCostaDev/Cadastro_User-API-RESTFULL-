@@ -20,7 +20,7 @@ function generateToken(params = {}) {
 const authMiddleware = require('../middlewares/auth')
 
 // Rota para ver todos os usuários
-router.get('/usersAll' ,async (req , res) => {
+router.get('/usersAll' /*,authMiddleware*/ ,async (req , res) => {
     try {
         const users = await User.find();
 
