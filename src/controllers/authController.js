@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+
 const authConfig = require('../config/auth');
 
 const User = require('../models/user');
@@ -14,7 +15,10 @@ function generateToken(params = {}) {
     });
 }
 
-router.get('/usersAll', async (req , res) => {
+const authMiddleware = require('../middlewares/auth')
+
+// Rota para ver todos os usuários
+router.get('/usersAll', authMiddleware ,async (req , res) => {
     try {
         const users = await User.find();
 
@@ -25,6 +29,7 @@ router.get('/usersAll', async (req , res) => {
     }
 });
 
+// Rota para ver um único usuário
 router.get('/users/:userId', async (req , res) => {
     try {
         const userId = req.params.userId;
@@ -37,6 +42,7 @@ router.get('/users/:userId', async (req , res) => {
     }
 });
 
+// Rota para registar um usuário
 router.post('/register', async (req, res) => {
     const { email } = req.body;
 
@@ -57,6 +63,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
+// Rota para usuário logar
 router.post('/authenticate', async (req, res) => {
     const { email, password } = req.body;
 
@@ -76,6 +83,7 @@ router.post('/authenticate', async (req, res) => {
         user,
         token: generateToken({  id: user.id }) });
 });
+
 
 router.put('/users/update/:userId', async (req, res) => {
     try {
